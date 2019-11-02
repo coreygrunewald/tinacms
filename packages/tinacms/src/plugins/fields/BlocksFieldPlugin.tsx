@@ -36,7 +36,6 @@ import {
   radius,
   font,
   IconButton,
-  Button,
   shadow,
 } from '@tinacms/styles'
 import { useFrameContext } from '../../components/SyledFrame'
@@ -51,9 +50,31 @@ interface BlocksFieldDefinititon extends Field {
 
 interface BlockTemplate {
   label: string
-  defaultItem: object
+  defaultItem?: object | (() => object)
   key: string
   fields: Field[]
+  /**
+   * An optional function which generates `props` for
+   * this items's `li`.
+   */
+  itemProps?: (
+    item: object
+  ) => {
+    /**
+     * The `key` property used to optimize the rendering of lists.
+     *
+     * If rendering is causing problems, use `defaultItem` to
+     * generate a unique key for the item.
+     *
+     * Reference:
+     * * https://reactjs.org/docs/lists-and-keys.html
+     */
+    key?: string
+    /**
+     * The label to be display on the list item.
+     */
+    label?: string
+  }
 }
 
 interface BlockFieldProps {
@@ -67,8 +88,13 @@ interface BlockFieldProps {
 const Blocks = function({ tinaForm, form, field, input }: BlockFieldProps) {
   const frame = useFrameContext()
   const addItem = React.useCallback(
-    (name, template) => {
-      const obj = template.defaultItem || {}
+    (name: string, template: BlockTemplate) => {
+      let obj: any = {}
+      if (typeof template.defaultItem === 'function') {
+        obj = template.defaultItem()
+      } else {
+        obj = template.defaultItem || {}
+      }
       obj._template = name
       form.mutators.insert(field.name, 0, obj)
     },
@@ -116,7 +142,7 @@ const Blocks = function({ tinaForm, form, field, input }: BlockFieldProps) {
       <GroupListPanel>
         <ItemList>
           <Droppable droppableId={field.name} type={field.name}>
-            {(provider, snapshot) => (
+            {(provider) => (
               <div ref={provider.innerRef} className="edit-page--list-parent">
                 {items.length === 0 && <EmptyState />}
                 {items.map((block: any, index: any) => {
@@ -124,6 +150,10 @@ const Blocks = function({ tinaForm, form, field, input }: BlockFieldProps) {
                   if (!template) {
                     // TODO: if no template return invalid entry
                   }
+                  const itemProps = (item: object) => {
+                    if (!template.itemProps) return {}
+                    return template.itemProps(item)
+                  };
 
                   return (
                     <BlockListItem
@@ -134,6 +164,7 @@ const Blocks = function({ tinaForm, form, field, input }: BlockFieldProps) {
                       index={index}
                       field={field}
                       tinaForm={tinaForm}
+                      {...itemProps(block)}
                     />
                   )
                 })}
@@ -155,9 +186,11 @@ interface BlockListItemProps {
   index: number
   block: any
   template: BlockTemplate
+  label?: string
 }
 
 const BlockListItem = ({
+  label,
   tinaForm,
   field,
   index,
@@ -169,8 +202,6 @@ const BlockListItem = ({
   const removeItem = React.useCallback(() => {
     tinaForm.finalForm.mutators.remove(field.name, index)
   }, [tinaForm, field, index])
-
-  const label = block[template.key] || template.label
 
   return (
     <Draggable
@@ -189,7 +220,7 @@ const BlockListItem = ({
           >
             <DragHandle />
             <ItemClickTarget onClick={() => setExpanded(true)}>
-              <GroupLabel>{label}</GroupLabel>
+              <GroupLabel>{label || template.label}</GroupLabel>
             </ItemClickTarget>
             <DeleteButton onClick={removeItem}>
               <TrashIcon />
@@ -202,7 +233,7 @@ const BlockListItem = ({
             item={block}
             index={index}
             tinaForm={tinaForm}
-            label={label}
+            label={label || template.label}
             template={template}
           />
         </>
