@@ -16,8 +16,10 @@ limitations under the License.
 
 */
 import { Form, FormOptions, Field } from '@tinacms/core'
-import { useCMSForm, useCMS, useWatchFormValues } from 'react-tinacms'
+import { useCMS, useWatchFormValues, usePlugins, useForm } from 'react-tinacms'
 import { useMemo, useCallback, useState, useEffect } from 'react'
+import * as React from 'react'
+import { GlobalFormPlugin } from 'tinacms'
 
 interface JsonNode {
   id: string
@@ -29,7 +31,7 @@ interface JsonNode {
 export function useJsonForm(
   jsonNode: JsonNode | null,
   formOptions: Partial<FormOptions<any>> = {}
-) {
+): [JsonNode | null, Form | null] {
   /**
    * We're returning early here which means all the hooks called by this hook
    * violate the rules of hooks. In the case of the check for
@@ -37,13 +39,13 @@ export function useJsonForm(
    * will never change at runtime.
    */
   if (!jsonNode || process.env.NODE_ENV === 'production') {
-    return [{}, null]
+    return [jsonNode, null]
   }
   validateJsonNode(jsonNode)
 
   /* eslint-disable-next-line react-hooks/rules-of-hooks */
   const cms = useCMS()
-  const label = jsonNode.fileRelativePath
+  const label = formOptions.label || jsonNode.fileRelativePath
   const id = jsonNode.fileRelativePath
 
   /**
@@ -86,7 +88,7 @@ export function useJsonForm(
   fields.push({ name: 'jsonNode', component: null })
 
   /* eslint-disable-next-line react-hooks/rules-of-hooks */
-  const [, form] = useCMSForm(
+  const [, form] = useForm(
     {
       id,
       label,
@@ -94,7 +96,7 @@ export function useJsonForm(
       fields,
       onSubmit(data) {
         return cms.api.git.onSubmit!({
-          files: [data.fileRelativePath],
+          files: [data.jsonNode.fileRelativePath],
           message: data.__commit_message || 'Tina commit',
           name: data.__commit_name,
           email: data.__commit_email,
@@ -111,10 +113,10 @@ export function useJsonForm(
 
   /* eslint-disable-next-line react-hooks/rules-of-hooks */
   const writeToDisk = useCallback(formState => {
-    const { fileRelativePath, rawJson, ...data } = formState.values.rawJson
+    const { rawJson, jsonNode } = formState.values
     cms.api.git.onChange!({
-      fileRelativePath: formState.values.jsonNode.fileRelativePath,
-      content: JSON.stringify(data, null, 2),
+      fileRelativePath: jsonNode.fileRelativePath,
+      content: JSON.stringify(rawJson, null, 2),
     })
   }, [])
 
@@ -122,6 +124,30 @@ export function useJsonForm(
   useWatchFormValues(form, writeToDisk)
 
   return [jsonNode, form as Form]
+}
+
+export function useLocalJsonForm(
+  jsonNode: JsonNode | null,
+  formOptions: Partial<FormOptions<any>> = {}
+) {
+  const [values, form] = useJsonForm(jsonNode, formOptions)
+  usePlugins(form as any)
+  return [values, form]
+}
+
+export function useGlobalJsonForm(
+  jsonNode: JsonNode | null,
+  formOptions: Partial<FormOptions<any>> = {}
+) {
+  const [values, form] = useJsonForm(jsonNode, formOptions)
+  usePlugins(
+    React.useMemo(() => {
+      if (form) {
+        return new GlobalFormPlugin(form, null)
+      }
+    }, [form])
+  )
+  return [values, form]
 }
 
 function generateFields(post: any): Field[] {

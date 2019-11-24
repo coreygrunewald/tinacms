@@ -1,14 +1,10 @@
-# [TinaCMS](https://tinacms.org) &nbsp; [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Ftinacms.org&text=I%20just%20checked%20out%20@tina_cms%20on%20GitHub%20and%20it%20is%20saweet%21&hashtags=TinaCMS%2Cjamstack%2Cheadlesscms)
-
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-25-orange.svg?style=flat-square)](#contributors)
-
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+# [![TINA CMS](https://res.cloudinary.com/forestry-demo/image/upload/h_46/v1573166832/Tina_CMS_Wordmark.png)](https://tinacms.org) &nbsp; [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?url=https%3A%2F%2Ftinacms.org&text=I%20just%20checked%20out%20@tina_cms%20on%20GitHub%20and%20it%20is%20saweet%21&hashtags=TinaCMS%2Cjamstack%2Cheadlesscms)
 
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Ftinacms%2Ftinacms%2Fbadge&style=flat)](https://actions-badge.atrox.dev/tinacms/tinacms/goto)
 [![Slack](https://img.shields.io/badge/slack-tinacms-blue.svg?logo=slack)](https://tinacms.slack.com)
-[![Lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+[![Lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-29-orange.svg?style=flat-square)](#contributors)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Getting Started
 
@@ -19,7 +15,7 @@
   - [How to Contribute](./CONTRIBUTING.md#How-to-Contribute)
   - [Creating Packages](./CONTRIBUTING.md#Creating-Packages)
   - [Troubleshooting in Development](./CONTRIBUTING.md#Troubleshooting-in-Development)
-  - [Releasing](./CONTRIBUTING.md#Releasing)
+- [Release Process](./RELEASE.md)
 
 [![Tina Demo](https://res.cloudinary.com/forestry-demo/video/upload/du_16,w_700,e_loop/v1571159974/tina-hero-demo.gif)](https://tinacms.org/)
 
@@ -51,6 +47,30 @@ TinaCMS uses [Lerna](https://lerna.js.org/) to manage dependencies when developi
 | npm run watch                      | Watch all packages for rebuilds.              |
 | npm run test                       | Run tests for all packages.                   |
 | lerna run build --scope \<package> | Build only \<package>.                        |
+
+### Testing With External Projects
+
+Currently, testing with external projects is somewhat inelegant, but this repo includes a folder designed for importing external projects into the monorepo so the development versions of Tina packages can be bootstrapped into the project. To import an external project:
+
+1. `git clone` or simply copy the project into the `packages/@testing` folder. Everything in this folder is ignored by git.
+2. In the root of the monorepo, run `npm run bs` to link the necessary development packages
+3. Navigate to your project folder and develop normally
+
+**Pitfalls of Testing with External Projects**
+
+- Running `npm run build` in the root of the monorepo will run a `build` script if your project has one defined. If this causes problems (tina may be causing your build to fail in the first place, and you want to skip the build for now but still build the other packages,) you can get around this by either running `lerna run build --ignore=YOUR_PACKAGE_NAME` or adding the name of your package to the `ignore` array for the `run` command in `lerna.json`.
+```json
+//lerna.json
+{
+  "command": {
+    "run": {
+      "ignore": ["YOUR_PACKAGE_NAME"]
+    }
+  }
+}
+```
+- Gatsby and React both rely on some globally-persisted values which can cause errors if you have multiple copies of these dependencies installed. When testing a Gatsby site, many issues can be worked around by temporarily deleting the `demo-gatsby` package and bootstrapping again.
+
 
 ## Release Process
 
@@ -120,12 +140,16 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://metamas.com"><img src="https://avatars2.githubusercontent.com/u/2520253?v=4" width="100px;" alt="Mason Medeiros"/><br /><sub><b>Mason Medeiros</b></sub></a><br /><a href="#userTesting-metamas" title="User Testing">📓</a></td>
     <td align="center"><a href="https://github.com/IronSean"><img src="https://avatars3.githubusercontent.com/u/1960190?v=4" width="100px;" alt="ironsean"/><br /><sub><b>ironsean</b></sub></a><br /><a href="#userTesting-IronSean" title="User Testing">📓</a></td>
     <td align="center"><a href="https://github.com/kypp"><img src="https://avatars1.githubusercontent.com/u/4457071?v=4" width="100px;" alt="kyp"/><br /><sub><b>kyp</b></sub></a><br /><a href="https://github.com/tinacms/tinacms/issues?q=author%3Akypp" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/smashercosmo"><img src="https://avatars0.githubusercontent.com/u/273283?v=4" width="100px;" alt="Vladislav Shkodin"/><br /><sub><b>Vladislav Shkodin</b></sub></a><br /><a href="https://github.com/tinacms/tinacms/issues?q=author%3Asmashercosmo" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/maciekgrzybek"><img src="https://avatars2.githubusercontent.com/u/16546428?v=4" width="100px;" alt="maciek_grzybek"/><br /><sub><b>maciek_grzybek</b></sub></a><br /><a href="#ideas-maciekgrzybek" title="Ideas, Planning, & Feedback">🤔</a> <a href="https://github.com/tinacms/tinacms/commits?author=maciekgrzybek" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/weibenfalk"><img src="https://avatars1.githubusercontent.com/u/11212270?v=4" width="100px;" alt="weibenfalk"/><br /><sub><b>weibenfalk</b></sub></a><br /><a href="#video-weibenfalk" title="Videos">📹</a></td>
   </tr>
 </table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+
+![](https://res.cloudinary.com/forestry-demo/image/upload/h_85/v1573167387/Favicon.png)

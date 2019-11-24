@@ -16,7 +16,6 @@ limitations under the License.
 
 */
 
-import '@tinacms/fields/node_modules/@tinacms/styles'
 import * as React from 'react'
 import { useCallback, useState } from 'react'
 import { createPortal } from 'react-dom'
@@ -127,6 +126,14 @@ export const ModalHeader: StyledComponent<'div', {}> = styled.div`
 export const ModalBody = styled.div<{ padded?: boolean }>`
   padding: ${p => (p.padded ? padding() : '0')};
   margin: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 10rem;
+
+  &:last-child {
+    border-radius: 0 0 0.3rem 0.3rem;
+  }
 `
 
 export const ModalActions: StyledComponent<'div', {}, {}> = styled.div`

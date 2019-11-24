@@ -16,7 +16,12 @@ limitations under the License.
 
 */
 
-export function api(req: any, res: any) {
-  console.log(req.query)
-  res.json(req.query)
-}
+import { graphql } from 'gatsby'
+
+export const tinaRemarkFragment = graphql`
+  fragment TinaRemark on MarkdownRemark {
+    fileRelativePath
+    rawFrontmatter
+    rawMarkdownBody
+  }
+`

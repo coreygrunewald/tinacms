@@ -3,7 +3,64 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.1.8](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.8-alpha.0...@tinacms/fields@0.1.8) (2019-10-28)
+## [0.1.14](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.14-alpha.1...@tinacms/fields@0.1.14) (2019-11-18)
+
+**Note:** Version bump only for package @tinacms/fields
+
+
+
+
+
+## [0.1.14-alpha.1](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.13...@tinacms/fields@0.1.14-alpha.1) (2019-11-18)
+
+**Note:** Version bump only for package @tinacms/fields
+
+
+
+
+
+## [0.1.14-alpha.0](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.13...@tinacms/fields@0.1.14-alpha.0) (2019-11-18)
+
+**Note:** Version bump only for package @tinacms/fields
+
+
+
+
+
+## [0.1.13](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.12...@tinacms/fields@0.1.13) (2019-11-14)
+
+**Note:** Version bump only for package @tinacms/fields
+
+
+
+
+
+## 0.1.12 (2019-11-12)
+
+### Bug Fixes
+
+- remove margin from wysiwyg menu buttons ([7a4df52](https://github.com/tinacms/tinacms/commit/7a4df52))
+- styled-components is a peerDependency ([baaf3de](https://github.com/tinacms/tinacms/commit/baaf3de))
+- **wysiwyg:** enter should split items ([209984f](https://github.com/tinacms/tinacms/commit/209984f)), closes [#393](https://github.com/tinacms/tinacms/issues/393)
+- **wysiwyg:** enter should split items ([16fabe3](https://github.com/tinacms/tinacms/commit/16fabe3)), closes [#393](https://github.com/tinacms/tinacms/issues/393)
+
+## 0.1.9 (2019-11-04)
+
+### Bug Fixes
+
+- remove margin from wysiwyg menu buttons ([7a4df52](https://github.com/tinacms/tinacms/commit/7a4df52))
+- styled-components is a peerDependency ([baaf3de](https://github.com/tinacms/tinacms/commit/baaf3de))
+- **wysiwyg:** enter should split items ([209984f](https://github.com/tinacms/tinacms/commit/209984f)), closes [#393](https://github.com/tinacms/tinacms/issues/393)
+- **wysiwyg:** enter should split items ([16fabe3](https://github.com/tinacms/tinacms/commit/16fabe3)), closes [#393](https://github.com/tinacms/tinacms/issues/393)
+
+## [0.1.9-alpha.0](https://github.com/tinacms/tinacms/compare/@tinacms/fields@0.1.8-alpha.0...@tinacms/fields@0.1.9-alpha.0) (2019-10-28)
+
+### Bug Fixes
+
+- remove margin from wysiwyg menu buttons ([7a4df52](https://github.com/tinacms/tinacms/commit/7a4df52))
+- styled-components is a peerDependency ([baaf3de](https://github.com/tinacms/tinacms/commit/baaf3de))
+
+## 0.1.8 (2019-10-28)
 
 ### Bug Fixes
 
